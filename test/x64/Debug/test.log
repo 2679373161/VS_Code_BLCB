@@ -1,0 +1,148 @@
+﻿  main.cpp
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(136): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(137): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(411): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(421): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(561): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(562): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(852): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(869): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(870): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1054): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1071): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1072): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1192): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1209): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1210): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1331): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1348): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1349): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(1902): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2005): warning C4244: “=”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2012): warning C4244: “=”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2159): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2175): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2176): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2275): warning C4477: “fprintf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 2 拥有了类型“unsigned __int64”
+  d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2275): note: 请考虑在格式字符串中使用“%zd”
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2310): warning C4473: “fprintf”: 没有为格式字符串传递足够的参数
+  d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2310): note: 占位符和其参数预计 4 可变参数，但提供的却是 2 参数
+  d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2310): note: 缺失的可变参数 3 为格式字符串“%f”所需
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2254): warning C4101: “removeStvflag”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2253): warning C4101: “removeScratchFlag”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2503): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2676): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2690): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2691): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2770): warning C4477: “fprintf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 2 拥有了类型“unsigned __int64”
+  d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2770): note: 请考虑在格式字符串中使用“%zd”
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2770): warning C4473: “fprintf”: 没有为格式字符串传递足够的参数
+  d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2770): note: 占位符和其参数预计 5 可变参数，但提供的却是 3 参数
+  d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2770): note: 缺失的可变参数 4 为格式字符串“%f”所需
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(2865): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3296): warning C4244: “=”: 从“double”转换到“_Ty”，可能丢失数据
+          with
+          [
+              _Ty=int
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3446): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3447): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3505): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3700): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3684): warning C4101: “y2”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3684): warning C4101: “y1”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3684): warning C4101: “x1”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3684): warning C4101: “x4”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3684): warning C4101: “y3”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3684): warning C4101: “x3”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3684): warning C4101: “y4”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3684): warning C4101: “x2”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3861): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3842): warning C4101: “y2”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3842): warning C4101: “y1”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3842): warning C4101: “x1”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3842): warning C4101: “x4”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3842): warning C4101: “y3”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3842): warning C4101: “x3”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3842): warning C4101: “y4”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3842): warning C4101: “x2”: 未引用的局部变量
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3988): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3993): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\postgraduate\09_project\01_image\01_code\10test\test\main.cpp(3994): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+  test.vcxproj -> D:\Postgraduate\09_project\01_image\01_code\10test\x64\Debug\test.exe

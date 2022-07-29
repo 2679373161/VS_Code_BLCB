@@ -1,0 +1,215 @@
+﻿  main.cpp
+h:\bgy\白点测试0\白点测试\test\main.cpp(126): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(138): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(308): warning C4244: “参数”: 从“__int64”转换到“intptr_t”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(309): warning C4244: “参数”: 从“__int64”转换到“intptr_t”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(373): warning C4244: “参数”: 从“__int64”转换到“intptr_t”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(374): warning C4244: “参数”: 从“__int64”转换到“intptr_t”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(608): warning C4101: “e”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(845): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(846): warning C4244: “初始化”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(859): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(860): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(1012): warning C4244: “参数”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(1013): warning C4244: “参数”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(1016): warning C4244: “参数”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(1017): warning C4244: “参数”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(1063): warning C4018: “>”: 有符号/无符号不匹配
+h:\bgy\白点测试0\白点测试\test\main.cpp(1084): warning C4018: “>”: 有符号/无符号不匹配
+h:\bgy\白点测试0\白点测试\test\main.cpp(1198): warning C4018: “>”: 有符号/无符号不匹配
+h:\bgy\白点测试0\白点测试\test\main.cpp(1589): warning C4101: “n”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(1606): warning C4101: “n”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(1681): warning C4101: “n”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(1697): warning C4101: “n”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(1886): warning C4244: “=”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(1893): warning C4244: “=”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(1918): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(2016): warning C4244: “=”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(2023): warning C4244: “=”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(2050): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(2122): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(2129): warning C4018: “<”: 有符号/无符号不匹配
+h:\bgy\白点测试0\白点测试\test\main.cpp(2147): warning C4244: “=”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(2154): warning C4244: “=”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(2181): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(2617): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(2704): warning C4244: “=”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(2705): warning C4244: “=”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(2931): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(3089): warning C4554: “&”: 检查运算符优先级是否存在的可能的错误；使用括号阐明优先级
+h:\bgy\白点测试0\白点测试\test\main.cpp(2762): warning C4101: “n”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(2779): warning C4101: “n”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(2858): warning C4101: “n”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(2874): warning C4101: “n”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(3175): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(3222): warning C4244: “=”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(3223): warning C4244: “=”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(3329): warning C4244: “初始化”: 从“_Ty”转换到“int”，可能丢失数据
+          with
+          [
+              _Ty=double
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(3941): warning C4244: “=”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(3942): warning C4244: “=”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(4110): warning C4101: “meanAll”: 未引用的局部变量
+h:\bgy\白点测试0\白点测试\test\main.cpp(4438): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(4439): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(4454): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(4595): warning C4244: “=”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(4596): warning C4244: “=”: 从“_Tp”转换到“float”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(4720): warning C4244: “初始化”: 从“_Ty”转换到“int”，可能丢失数据
+          with
+          [
+              _Ty=double
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(5002): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(5210): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=uchar
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(5324): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(5410): warning C4244: “=”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(5478): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(5479): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(5480): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(5481): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(5867): warning C4244: “参数”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=double
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(6023): warning C4244: “初始化”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=double
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(6042): warning C4244: “参数”: 从“double”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=int
+          ]
+h:\bgy\白点测试0\白点测试\test\main.cpp(6063): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6084): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6085): warning C4018: “<”: 有符号/无符号不匹配
+h:\bgy\白点测试0\白点测试\test\main.cpp(6104): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6123): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6124): warning C4018: “<”: 有符号/无符号不匹配
+h:\bgy\白点测试0\白点测试\test\main.cpp(6143): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6161): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6162): warning C4018: “<”: 有符号/无符号不匹配
+h:\bgy\白点测试0\白点测试\test\main.cpp(6181): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6201): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6202): warning C4018: “<”: 有符号/无符号不匹配
+h:\bgy\白点测试0\白点测试\test\main.cpp(6228): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6231): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6254): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6255): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6256): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6257): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+h:\bgy\白点测试0\白点测试\test\main.cpp(6870): warning C4244: “初始化”: 从“_Tp”转换到“int”，可能丢失数据
+          with
+          [
+              _Tp=double
+          ]
+  test.vcxproj -> H:\BGY\白点测试0\白点测试\Debug\test.exe
