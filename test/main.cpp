@@ -64,7 +64,7 @@ void num2string(double num, string& str)
 	ss << num;
 	str = ss.str();
 }
-string rootPath = "D:\\test\\verify\\LONG\\7_28\\打折漏检样本\\435";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
+string rootPath = "D:\\test\\verify\\LONG\\7_28\\打折漏检样本\\441";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
 string rootPath1 = "D:\\test\\verify\\膜材折痕固定位置漏检样本";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
 //ofstream  csvFile("F:\\photoScreen\\手机屏项目出差\\检测结果.csv");//保存结果路径
 
@@ -1811,10 +1811,10 @@ bool Crease(Mat frontSideLight, Mat front, Mat left, Mat* mresult, string* cause
 	threshold(front, shieldMask, 0.3 * mean(front)[0], 255, CV_THRESH_BINARY_INV);
 	Mat dilateElement = getStructuringElement(MORPH_RECT, Size(29, 29));
 	dilate(shieldMask, shieldMask, dilateElement);
-	shieldMask(Rect(0, 0, shieldMask.cols, 0)) = uchar(255);
-	shieldMask(Rect(0, shieldMask.rows - 0, shieldMask.cols, 0)) = uchar(255);
-	shieldMask(Rect(0, 0, 0, shieldMask.rows)) = uchar(255);
-	shieldMask(Rect(shieldMask.cols - 0, 0, 0, shieldMask.rows)) = uchar(255);
+	shieldMask(Rect(0, 0, shieldMask.cols, 10)) = uchar(255);
+	shieldMask(Rect(0, shieldMask.rows - 10, shieldMask.cols, 10)) = uchar(255);
+	shieldMask(Rect(0, 0, 5, shieldMask.rows)) = uchar(255);
+	shieldMask(Rect(shieldMask.cols - 5, 0, 5, shieldMask.rows)) = uchar(255);
 
 
 
@@ -1882,26 +1882,38 @@ bool Crease(Mat frontSideLight, Mat front, Mat left, Mat* mresult, string* cause
 	Mat smallRightTh_Original;
 
 
+
 	Mat smallTop = smallSrc(Rect(0, 0, smallSrc.cols, 100));
 	Mat smallButtom = smallSrc(Rect(0, 1400, smallSrc.cols, 100));
 	Mat smallLeft = smallSrc(Rect(0, 0, 200, smallSrc.rows));
 	Mat smallRight = smallSrc(Rect(2800, 0, 200, smallSrc.rows));
+	
+	Mat smallRight_Original;
+	smallRight_Original = Test_Original_Process(Rect(2800, 0, 200, Test_Original_Process.rows)).clone();//右侧无滤波
 
-	Mat smallRight_Original = Test_Original_Process(Rect(2800, 0, 200, Test_Original_Process.rows));//右侧无滤波
-
-
+	Ptr<CLAHE> clahe = createCLAHE(2, Size(8, 8));
+	Mat smallRight_Original_clahe;
+	clahe->apply(smallRight_Original, smallRight_Original_clahe);   //局部增强
+	smallRight_Original_clahe = Gabor7(smallRight_Original_clahe);
 	adaptiveThreshold(smallTop, smallTopTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 9, -2);
 	adaptiveThreshold(smallButtom, smallButtomTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 9, -2);
 	adaptiveThreshold(smallLeft, smallLeftTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 13, 2.5);//19
 	adaptiveThreshold(smallRight, smallRightTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 13, 2);//19
 
-	adaptiveThreshold(smallRight_Original, smallRightTh_Original, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 13, 2);//19
+	adaptiveThreshold(smallRight_Original_clahe, smallRight_Original_clahe, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 13, 2);//19
+
+	Mat struct1 = getStructuringElement(0, Size(3, 3));  //矩形结构元素
+
+	dilate(smallRight_Original_clahe, smallRight_Original_clahe, struct1);//膨胀 还原
+	erode(smallRight_Original_clahe, smallRight_Original_clahe, struct1);	//腐蚀 减少噪声
+	
 
 	adaptiveThreshold(smallSrc, smallSrcTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 39, -2);
 
 	//边缘替换
 	smallLeftTh = ~smallLeftTh;
-	smallRightTh = ~smallRightTh;
+	//smallRightTh = ~smallRightTh;
+	smallRightTh = ~smallRight_Original_clahe;
 
 	smallTopTh.copyTo(smallSrcTh(Rect(0, 0, smallSrc.cols, 100)));
 	smallButtomTh.copyTo(smallSrcTh(Rect(0, 1400, smallSrc.cols, 100)));
@@ -1971,7 +1983,7 @@ bool Crease(Mat frontSideLight, Mat front, Mat left, Mat* mresult, string* cause
 		//cout << smallArea << " " << smallRatio << " " << meanGray.at<double>(0) << " " << removeScratch1 << " " << stdDev.at<double>(0) << " " << psnr << " " << gradient << " " << entropy << endl;
 
 		if (smallRatio > 2.8 && smallRatio < 20.0 && meanGray.at<double>(0) < 180 && (abs(removeScratch1) > 3 || stdDev.at<double>(0) > 2.5)) {
-			*causecolor = "小折痕";
+				*causecolor = "小折痕";
 			result = true;
 			CvPoint small_lt = cvPoint(smallX_1, smallY_1);
 			CvPoint small_br = cvPoint(smallX_2, smallY_2);
