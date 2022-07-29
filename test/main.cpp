@@ -34,7 +34,7 @@ void convexSetPretreatment(Mat& src);
 Mat Ployfit_Col7(Mat img_col, int poly_n, bool isSaveOrNot, double Scoral);
 bool Scratch(Mat white, Mat ceguang, Mat* mresult, string* causecolor, int camera);
 Mat gamma(Mat src, double g);
-bool Crease(Mat frontSideLight, Mat front, Mat left, Mat* mresult, string* causecolor, bool leftflag);
+bool Crease(Mat frontSideLight, Mat front, Mat left, Mat* mresult, string* causecolor, bool leftflag, Mat Front_Original);
 bool edgeCrease(Mat white_F1, Mat* mresult, string* causecolor);
 bool Creasemain(Mat white, Mat* mresult, string* causecolor);
 bool Crease_L(Mat frontSideLight, Mat front, Mat* mresult, string* causecolor);
@@ -263,7 +263,14 @@ int main() {
 		Mat src_ceguang_R = cv::imread(Path + "110.bmp", -1);
 		Mat src_ceguang_F = cv::imread(Path + "FrontCeguang.bmp", -1);
 
+		Mat src_white_MY = cv::imread(Path + "B0ROI.bmp", -1);
+		Mat src_white_L_MY = cv::imread(Path + "BLROI.bmp", -1);
+		Mat src_white_R_MY = cv::imread(Path + "BRROI.bmp", -1);
 		Mat src_White_F_MY = cv::imread(Path + "frontROI.bmp", -1);
+		Mat src_ceguang_MY = cv::imread(Path + "C0ROI.bmp", -1);
+		Mat src_ceguang_L_MY = cv::imread(Path + "CLROI.bmp", -1);
+		Mat src_ceguang_R_MY = cv::imread(Path + "CRROI.bmp", -1);
+		Mat src_ceguang_F_MY = cv::imread(Path + "FrontCeguangROI.bmp", -1);//改部分直接调用QT程序内的ROI图像
 		Mat M_white;
 		Mat M_white_2;
 		Mat M_black;
@@ -287,18 +294,30 @@ int main() {
 
 		//f_FrontBackCam_PersTransMatCal(src_white_B, &M_B_1, "后");
 
-		Mat white = toushi_white(src_white, M_white, -1, 3000, 1500);
-		Mat white_L1 = toushi_white(src_white_L, M_L_1_E, -5, 3000, 1500);
-		Mat white_R1 = toushi_white(src_white_R, M_R_1, -5, 3000, 1500);
-		Mat white_F1 = toushi_white(src_white_F, M_F_1, -1, 3000, 1500);
+		//Mat white = toushi_white(src_white, M_white, -1, 3000, 1500);
+		//Mat white_L1 = toushi_white(src_white_L, M_L_1_E, -5, 3000, 1500);
+		//Mat white_R1 = toushi_white(src_white_R, M_R_1, -5, 3000, 1500);
+		//Mat white_F1 = toushi_white(src_white_F, M_F_1, -1, 3000, 1500);
 
 
+		////Mat white_B1 = toushi_white(src_white_B, M_B_1, -5, 3000, 1500);
+		//Mat ceguang = toushi_white(src_ceguang, M_white, -1, 3000, 1500);
+		//Mat ceguang_L1 = toushi_white(src_ceguang_L, M_L_1, -5, 3000, 1500);
+		//Mat ceguang_R1 = toushi_white(src_ceguang_R, M_R_1, -5, 3000, 1500);
+
+		//Mat ceguang_F1 = toushi_white(src_ceguang_F, M_F_1, -1, 3000, 1500);
+
+		Mat white = src_white_MY;
+		Mat white_L1 = src_white_L_MY;
+		Mat white_R1 = src_white_R_MY;
+		Mat white_F1 = src_White_F_MY;
 		//Mat white_B1 = toushi_white(src_white_B, M_B_1, -5, 3000, 1500);
-		Mat ceguang = toushi_white(src_ceguang, M_white, -1, 3000, 1500);
-		Mat ceguang_L1 = toushi_white(src_ceguang_L, M_L_1, -5, 3000, 1500);
-		Mat ceguang_R1 = toushi_white(src_ceguang_R, M_R_1, -5, 3000, 1500);
+		Mat ceguang = src_ceguang_MY;
+		Mat ceguang_L1 = src_ceguang_L_MY;
+		Mat ceguang_R1 = src_ceguang_R_MY;
+		Mat ceguang_F1 = src_ceguang_F_MY;
 
-		Mat ceguang_F1 = toushi_white(src_ceguang_F, M_F_1, -1, 3000, 1500);
+
 		Mat frontSideLight = ceguang_F1;
 		Mat leftSideLight = ceguang_L1;
 		Mat rightSideLight = ceguang_R1;
@@ -331,8 +350,7 @@ int main() {
 		//result = leftRightCrease(white_R1, &mresult, &causecolor);
 
 		//小折痕检测
-		src_White_F_MY = Gabor7(src_White_F_MY);
-		result = Crease(frontSideLight, src_White_F_MY, white_L1, &mresult, &causecolor, true);//white_F1
+		result = Crease(frontSideLight, white_F1, white_L1, &mresult, &causecolor, true, src_White_F_MY);//white_F1
 
 		//膜材打折检测
 		//result = Creasemain(white, &mresult, &causecolor);
@@ -1783,7 +1801,7 @@ bool leftRightCrease(Mat left, Mat* mresult, string* causecolor) {
 //
 //	return result;
 //}
-bool Crease(Mat frontSideLight, Mat front, Mat left, Mat* mresult, string* causecolor, bool leftflag) {
+bool Crease(Mat frontSideLight, Mat front, Mat left, Mat* mresult, string* causecolor, bool leftflag ,Mat Front_Original) {
 	bool result = false;
 	//flip(front, front, -1);
 	//2022.3.28 am
@@ -1803,7 +1821,7 @@ bool Crease(Mat frontSideLight, Mat front, Mat left, Mat* mresult, string* cause
 	Mat frontWhite = front.clone();
 	//frontWhite = Gabor7Crease(frontWhite);
 	Mat smallSrc = frontWhite.clone();
-
+	Mat Test_Original_Process = Front_Original.clone();// 原始ROI图像未经过滤波
 	GaussianBlur(frontWhite, frontWhite, Size(25, 25), 5);        //白底滤波  *creasePara->GaussianStv
 
 	Mat frontSrcTh;  //前相机阈值分割
@@ -1861,17 +1879,23 @@ bool Crease(Mat frontSideLight, Mat front, Mat left, Mat* mresult, string* cause
 	Mat smallLeftTh;
 	Mat smallRightTh;
 
+	Mat smallRightTh_Original;
+
 
 	Mat smallTop = smallSrc(Rect(0, 0, smallSrc.cols, 100));
 	Mat smallButtom = smallSrc(Rect(0, 1400, smallSrc.cols, 100));
 	Mat smallLeft = smallSrc(Rect(0, 0, 200, smallSrc.rows));
 	Mat smallRight = smallSrc(Rect(2800, 0, 200, smallSrc.rows));
 
+	Mat smallRight_Original = Test_Original_Process(Rect(2800, 0, 200, Test_Original_Process.rows));//右侧无滤波
+
 
 	adaptiveThreshold(smallTop, smallTopTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 9, -2);
 	adaptiveThreshold(smallButtom, smallButtomTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 9, -2);
 	adaptiveThreshold(smallLeft, smallLeftTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 13, 2.5);//19
 	adaptiveThreshold(smallRight, smallRightTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 13, 2);//19
+
+	adaptiveThreshold(smallRight_Original, smallRightTh_Original, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 13, 2);//19
 
 	adaptiveThreshold(smallSrc, smallSrcTh, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 39, -2);
 
