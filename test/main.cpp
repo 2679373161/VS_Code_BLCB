@@ -64,7 +64,8 @@ void num2string(double num, string& str)
 	ss << num;
 	str = ss.str();
 }
-string rootPath = "D:\\test\\verify\\LONG\\7_28\\打折漏检样本\\441";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
+//string rootPath = "D:\\test\\verify\\LONG\\7_28\\打折漏检样本\\441";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
+string rootPath = "D:\\test\\verify\\Carell\\B03-0729-膜拱漏检\\1178BGWDBY";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
 string rootPath1 = "D:\\test\\verify\\膜材折痕固定位置漏检样本";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
 //ofstream  csvFile("F:\\photoScreen\\手机屏项目出差\\检测结果.csv");//保存结果路径
 
@@ -350,10 +351,10 @@ int main() {
 		//result = leftRightCrease(white_R1, &mresult, &causecolor);
 
 		//小折痕检测
-		result = Crease(frontSideLight, white_F1, white_L1, &mresult, &causecolor, true, src_White_F_MY);//white_F1
+		//result = Crease(frontSideLight, white_F1, white_L1, &mresult, &causecolor, true, src_White_F_MY);//white_F1
 
 		//膜材打折检测
-		//result = Creasemain(white, &mresult, &causecolor);
+		result = Creasemain(white, &mresult, &causecolor);
 
 		if (result) {
 			cout << causecolor << endl;
@@ -869,7 +870,7 @@ bool Creasemain(Mat white, Mat* mresult, string* causecolor) {
 		Mat tempMask = Mat::zeros(Size(3000, 1500), CV_8UC1);
 		drawContours(tempMask, contours, i, 255, 1, 8);
 		double area = contourArea(contours[i]);
-		if (area < 1200) {
+		if (area < 200) {
 			break;
 		}
 
@@ -892,6 +893,66 @@ bool Creasemain(Mat white, Mat* mresult, string* causecolor) {
 		int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
 		int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
 		double longShortRatio = max(h / w, w / h);
+		//膜拱特征提取（手动）
+		if (radio2 < 2 && w1 < 100)//长宽比，长度，宽度限制  radio2 > 2 && length > 200 && width > 3 && w1 > 150
+		{
+			int border_x = 10;//选定框边界宽度
+			int border_y = 10;//选定框边界宽度
+			if (area > 10000) {
+
+				if (w > h) {
+					border_x = 5;
+					border_y = 10;
+				}
+				else {
+					border_x = 10;
+					border_y = 5;
+				}
+			}
+			else {
+
+				if (w > h) {
+					border_x = 3;
+					border_y = 5;
+				}
+				else {
+					border_x = 5;
+					border_y = 3;
+				}
+			}
+
+			int x_lt = X_1 - border_x;
+			//越界保护
+			if (x_lt < 0)
+			{
+				x_lt = 0;
+			}
+			int y_lt = Y_1 - border_y;
+			if (y_lt < 0)
+			{
+				y_lt = 0;
+			}
+			int x_rt = X_2 + border_x;
+			if (x_rt > frontSrcTh2.size[1] - 1)
+			{
+				x_rt = frontSrcTh2.size[1] - 1;
+			}
+			int y_rt = Y_2 + border_y;
+			if (y_rt > frontSrcTh2.size[0] - 1)
+			{
+				y_rt = frontSrcTh2.size[0] - 1;
+			}
+			Mat whitelightSuspect = white(Rect(x_lt, y_lt, x_rt - x_lt - 1, y_rt - y_lt - 1));//白底图像疑似反光划痕图像
+			Mat tempMask_MY = Mat::zeros(Size(3000, 1500), CV_8UC1);
+			drawContours(tempMask_MY, contours, i, 255, -1, 8);
+			Mat mask = tempMask_MY(Rect(x_lt, y_lt, x_rt - x_lt - 1, y_rt - y_lt - 1));             //侧光图像疑似贴膜划痕掩膜
+
+			Point2f center_Need = center;
+			double removeScratchArea = (x_rt - x_lt - 2) * (y_rt - y_lt - 2);
+			double meanGrayin_Suspect1 = mean(whitelightSuspect, mask)[0];                            //缺陷中心灰度均值
+			double meanGrayout_Suspect1 = mean(whitelightSuspect, ~mask)[0];                          //缺陷外围灰度均值
+			double removeScratch1 = meanGrayin_Suspect1 - meanGrayout_Suspect1;                        //排除侧光图贴膜划痕的参数
+		}
 		if (radio2 > 2 && length > 200 && width > 3 && w1 > 150)//长宽比，长度，宽度限制  radio2 > 2 && length > 200 && width > 3 && w1 > 150
 		{
 			int border_x = 10;//选定框边界宽度
@@ -963,7 +1024,7 @@ bool Creasemain(Mat white, Mat* mresult, string* causecolor) {
 					rectangle(white, top_lef4, bottom_right4, Scalar(255, 255, 255), 5, 8, 0);
 					//                    imwrite( "D://1.bmp", frontSrcTh2);
 					*mresult = white;
-					break;
+					//break;
 				}
 
 			}
