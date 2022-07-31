@@ -43,6 +43,7 @@ bool Dead_light0(Mat white, Mat sideLight, Mat* mresult, string* causecolor);
 bool sideLightDetection(Mat sideLight);
 bool leftRightCrease(Mat white_L1, Mat* mresult, string* causecolor);
 bool blackLine(Mat white, Mat* mresult, string* causecolor);
+bool CreaseSag(Mat white, Mat white_L, Mat white_R, Mat* mresult, string* causecolor);//膜拱缺陷检测
 
 int bSums(Mat src);
 
@@ -65,7 +66,7 @@ void num2string(double num, string& str)
 	str = ss.str();
 }
 //string rootPath = "D:\\test\\verify\\LONG\\7_28\\打折漏检样本\\441";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
-string rootPath = "D:\\test\\verify\\Carell\\B03-0729-膜拱漏检\\1178BGWDBY";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
+string rootPath = "D:\\test\\verify\\Carell\\B03-0729-膜拱漏检\\1172BGWDBY";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
 string rootPath1 = "D:\\test\\verify\\膜材折痕固定位置漏检样本";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
 //ofstream  csvFile("F:\\photoScreen\\手机屏项目出差\\检测结果.csv");//保存结果路径
 
@@ -354,7 +355,10 @@ int main() {
 		//result = Crease(frontSideLight, white_F1, white_L1, &mresult, &causecolor, true, src_White_F_MY);//white_F1
 
 		//膜材打折检测
-		result = Creasemain(white, &mresult, &causecolor);
+		//result = Creasemain(white, &mresult, &causecolor);
+
+		//膜材膜拱检测
+		result = CreaseSag(src_white_MY, src_white_L_MY, src_white_R_MY, &mresult, &causecolor);//未滤波图像
 
 		if (result) {
 			cout << causecolor << endl;
@@ -1035,6 +1039,187 @@ bool Creasemain(Mat white, Mat* mresult, string* causecolor) {
 	return result;
 }
 
+
+bool CreaseSag(Mat white,Mat white_L, Mat white_R, Mat* mresult, string* causecolor) {
+	//输入为未进行滤波的图像
+	//初步思路 图像强化  滤波 自适应分割 特征筛选
+	bool result = false;
+	
+	//图像强化 缺陷较淡 呈现圆形状 极易受到灰度波动的影响 
+
+	////Laplace增强
+	//Mat img_white_clahe;
+	//Mat kernel = (Mat_<float>(3, 3) << 0, 1, 0, 0, -5, 0, 0, 1, 0);
+	//filter2D(white, img_white_clahe, CV_8UC1, kernel); //突出垂直线
+	//分块正方图均衡化
+	Ptr<CLAHE> clahe = createCLAHE(2, Size(40, 40));
+    Mat img_white_clahe;
+    clahe->apply(white, img_white_clahe);   //整图增强
+	Mat Feature_white = img_white_clahe.clone();
+	img_white_clahe = Gabor7(img_white_clahe);
+	Mat img_white_clahe_Th;
+	adaptiveThreshold(img_white_clahe, img_white_clahe_Th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 71, -3);//21   -1
+
+	Mat element_Th = getStructuringElement(MORPH_RECT, Size(7, 7));//开操作结构元素
+	morphologyEx(img_white_clahe_Th, img_white_clahe_Th, CV_MOP_OPEN, element_Th);   //开运算形态学操作。可以减少噪点
+
+	img_white_clahe_Th(Rect(0, 0, img_white_clahe_Th.cols, 20)) = uchar(0);
+	img_white_clahe_Th(Rect(0, img_white_clahe_Th.rows - 35, img_white_clahe_Th.cols, 35)) = uchar(0);
+	img_white_clahe_Th(Rect(0, 0, 20, img_white_clahe_Th.rows)) = uchar(0);
+	img_white_clahe_Th(Rect(img_white_clahe_Th.cols - 35, 0, 35, img_white_clahe_Th.rows)) = uchar(0);
+
+	vector<vector<Point>>contours;
+	findContours(img_white_clahe_Th, contours, RETR_LIST, CHAIN_APPROX_SIMPLE);
+	sort(contours.begin(), contours.end(), compareContourAreas);
+	vector<Rect> boundRect(contours.size());
+	for (vector<int> ::size_type i = 0; i < contours.size(); i++) {
+		Mat tempMask = Mat::zeros(Size(3000, 1500), CV_8UC1);
+		drawContours(tempMask, contours, i, 255, 1, 8);
+		double area = contourArea(contours[i]);
+		if (area > 5000) {
+			continue;
+		}
+		if (area < 200) {
+			break;
+		}
+
+		Point2f RectPoint[4];
+		RotatedRect  externrect = minAreaRect(Mat(contours[i]));
+		double mw2 = externrect.size.height;
+		double mh2 = externrect.size.width;
+		Point2f center = externrect.center;  //中心
+		//特征一： 长宽比
+		double radio2 = max(mw2 / mh2, mh2 / mw2); // 80
+		//特征二： 最大长度
+		double length = max(mw2, mh2);
+		double width = min(mw2, mh2);
+		boundRect[i] = boundingRect(Mat(contours[i]));
+		float w = boundRect[i].width;
+		float h = boundRect[i].height;
+		float w1 = max(h, w);;
+		int X_1 = boundRect[i].tl().x;//矩形左上角X坐标值
+		int Y_1 = boundRect[i].tl().y;//矩形左上角Y坐标值
+		int X_2 = boundRect[i].br().x;//矩形右下角X坐标值
+		int Y_2 = boundRect[i].br().y;//矩形右下角Y坐标值
+		double longShortRatio = max(h / w, w / h);
+		//面积占比
+		double radio_area = area / (w*h);
+		double diff_Ratio = longShortRatio - radio2;
+		//膜拱特征提取（手动）
+		if (radio2 < 1.5 && w1 < 100 && abs(diff_Ratio)<0.2&&radio_area>0.5)//长宽比，长度，宽度限制  radio2 > 2 && length > 200 && width > 3 && w1 > 150
+		{
+			int border_x = 10;//选定框边界宽度
+			int border_y = 10;//选定框边界宽度
+			if (area > 10000) {
+
+				if (w > h) {
+					border_x = 5;
+					border_y = 10;
+				}
+				else {
+					border_x = 10;
+					border_y = 5;
+				}
+			}
+			else {
+
+				if (w > h) {
+					border_x = 3;
+					border_y = 5;
+				}
+				else {
+					border_x = 5;
+					border_y = 3;
+				}
+			}
+
+			int x_lt = X_1 - border_x;
+			//越界保护
+			if (x_lt < 0)
+			{
+				x_lt = 0;
+			}
+			int y_lt = Y_1 - border_y;
+			if (y_lt < 0)
+			{
+				y_lt = 0;
+			}
+			int x_rt = X_2 + border_x;
+			if (x_rt > img_white_clahe_Th.size[1] - 1)
+			{
+				x_rt = img_white_clahe_Th.size[1] - 1;
+			}
+			int y_rt = Y_2 + border_y;
+			if (y_rt > img_white_clahe_Th.size[0] - 1)
+			{
+				y_rt = img_white_clahe_Th.size[0] - 1;
+			}
+			Mat whitelightSuspect = Feature_white(Rect(x_lt, y_lt, x_rt - x_lt - 1, y_rt - y_lt - 1));//白底图像疑似反光划痕图像
+			Mat whitelightSuspect_L = white_L(Rect(x_lt, y_lt, x_rt - x_lt - 1, y_rt - y_lt - 1));//白底图像疑似反光划痕图像
+			Mat whitelightSuspect_R = white_R(Rect(x_lt, y_lt, x_rt - x_lt - 1, y_rt - y_lt - 1));//白底图像疑似反光划痕图像
+			Mat tempMask_MY = Mat::zeros(Size(3000, 1500), CV_8UC1);
+			Mat tempMask_MY_Edge = Mat::zeros(Size(3000, 1500), CV_8UC1);
+			drawContours(tempMask_MY, contours, i, 255, -1, 8);
+			drawContours(tempMask_MY_Edge, contours, i, 255, 1, 8);
+			Mat mask = tempMask_MY(Rect(x_lt, y_lt, x_rt - x_lt - 1, y_rt - y_lt - 1));             //侧光图像疑似贴膜划痕掩膜
+			Mat mask_Edge = tempMask_MY_Edge(Rect(x_lt, y_lt, x_rt - x_lt - 1, y_rt - y_lt - 1));             //侧光图像疑似贴膜划痕掩膜
+
+			double offsetin_Suspect1 = 0; //内
+			double offsetout_Suspect1 = 0; //外
+
+			double offsetEdage_Suspect1 = 0;//边缘
+
+			bool L_F_Flag = true;
+			if (center.x > 750)
+			{
+				L_F_Flag = false;
+				offsetin_Suspect1 = mean(whitelightSuspect_L, mask - mask_Edge)[0];//缺陷中心灰度均值
+				offsetout_Suspect1 = mean(whitelightSuspect_L, ~mask)[0];//缺陷外围灰度均值
+
+				offsetEdage_Suspect1 = mean(whitelightSuspect_L, mask_Edge)[0];//缺陷边缘灰度均值
+
+			}
+			offsetout_Suspect1 = mean(whitelightSuspect_R, ~mask)[0];//缺陷外围灰度均值
+
+			offsetEdage_Suspect1 = mean(whitelightSuspect_R, mask_Edge)[0];//缺陷边缘灰度均值
+
+			offsetin_Suspect1 = mean(whitelightSuspect_R, mask - mask_Edge)[0];//缺陷中心灰度均值
+			
+			
+
+
+			double offsetScratch1 = offsetin_Suspect1 - offsetout_Suspect1;                        //排除侧光图贴膜划痕的参数
+
+			
+			double removeScratchArea = (x_rt - x_lt - 2) * (y_rt - y_lt - 2);
+
+			double meanGrayout_Suspect1 = mean(whitelightSuspect, ~mask)[0];                          //缺陷外围灰度均值
+
+			double meanGrayEdage_Suspect1 = mean(whitelightSuspect, mask_Edge)[0];                          //缺陷边缘灰度均值
+
+			double meanGrayin_Suspect1 = mean(whitelightSuspect, mask - mask_Edge)[0];                            //缺陷中心灰度均值
+
+			
+			
+
+			double removeScratch1 = meanGrayin_Suspect1 - meanGrayout_Suspect1;                        //排除侧光图贴膜划痕的参数
+			if (removeScratch1>2&& offsetin_Suspect1 >0.7\
+				&&(meanGrayEdage_Suspect1< meanGrayin_Suspect1)&&(meanGrayout_Suspect1< meanGrayEdage_Suspect1)\
+				&&(offsetout_Suspect1 < offsetEdage_Suspect1)&&((offsetEdage_Suspect1< offsetin_Suspect1)||abs(offsetEdage_Suspect1- offsetin_Suspect1)<0.2))
+			{
+				*causecolor = "膜拱缺陷";
+				result = true;
+				CvPoint top_lef4 = cvPoint(x_lt, y_lt);
+				CvPoint bottom_right4 = cvPoint(x_rt, y_rt);
+				rectangle(white, top_lef4, bottom_right4, Scalar(255, 255, 255), 5, 8, 0);
+				//                    imwrite( "D://1.bmp", frontSrcTh2);
+				*mresult = white;
+				//break;
+			}
+		}
+	}
+	return result;
+}
 bool leftRightCrease(Mat left, Mat* mresult, string* causecolor) {
 
 	bool result = false;
