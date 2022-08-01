@@ -1,0 +1,21 @@
+﻿  main.cpp
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(17): warning C4305: “=”: 从“double”到“float”截断
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(19): warning C4305: “=”: 从“double”到“float”截断
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(55): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(59): warning C4244: “=”: 从“int”转换到“_Tp”，可能丢失数据
+          with
+          [
+              _Tp=float
+          ]
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(68): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(86): warning C4305: “初始化”: 从“double”到“float”截断
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(94): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(112): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(153): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(154): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+d:\postgraduate\09_project\01_image\07_git\blcb_vs\level_set\level_set\level_set\main.cpp(212): warning C4326: “main”的返回类型应为“int”而非“void”
+  Level_set.vcxproj -> D:\Postgraduate\09_project\01_image\07_Git\BLCB_VS\Level_Set\Level_set\x64\Debug\Level_set.exe

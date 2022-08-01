@@ -66,7 +66,7 @@ void num2string(double num, string& str)
 	str = ss.str();
 }
 //string rootPath = "D:\\test\\verify\\LONG\\7_28\\打折漏检样本\\441";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
-string rootPath = "D:\\test\\verify\\Carell\\B03-0729-膜拱漏检\\1172BGWDBY";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
+string rootPath = "D:\\test\\verify\\Carell\\B03-0801-膜材打折漏检3号机\\2040BGWD";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
 string rootPath1 = "D:\\test\\verify\\膜材折痕固定位置漏检样本";//文件根目录  1\\2.8寸样本总览\\少线\\2.8寸少线\\2.8寸少线\\108SX_
 //ofstream  csvFile("F:\\photoScreen\\手机屏项目出差\\检测结果.csv");//保存结果路径
 
@@ -1056,9 +1056,10 @@ bool CreaseSag(Mat white,Mat white_L, Mat white_R, Mat* mresult, string* causeco
     Mat img_white_clahe;
     clahe->apply(white, img_white_clahe);   //整图增强
 	Mat Feature_white = img_white_clahe.clone();
+	imwrite("D://Feature_white.bmp", Feature_white);
 	img_white_clahe = Gabor7(img_white_clahe);
 	Mat img_white_clahe_Th;
-	adaptiveThreshold(img_white_clahe, img_white_clahe_Th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 71, -3);//21   -1
+	adaptiveThreshold(img_white_clahe, img_white_clahe_Th, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 171, -3);//21   -1
 
 	Mat element_Th = getStructuringElement(MORPH_RECT, Size(7, 7));//开操作结构元素
 	morphologyEx(img_white_clahe_Th, img_white_clahe_Th, CV_MOP_OPEN, element_Th);   //开运算形态学操作。可以减少噪点
