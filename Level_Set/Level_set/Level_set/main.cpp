@@ -10,6 +10,8 @@
 using namespace std;
 using namespace cv;
 
+static const double C1 = 6.5025, C2 = 58.5225;
+
 Mat Gabor7(Mat img_1);
 Mat butterworth_high_kernel(cv::Mat &scr, float sigma, int n);
 Mat butterworth_high_pass_filter(cv::Mat &src, float d0, int n);
@@ -17,6 +19,10 @@ void fftshift(cv::Mat &plane0, cv::Mat &plane1);
 Mat frequency_filter(cv::Mat &scr, cv::Mat &blur);
 void getcart(int rows, int cols, cv::Mat &x, cv::Mat &y);
 Mat image_make_border(cv::Mat &src);
+void SingleScaleRetinex(const Mat& src, Mat& dst, int sigma);
+void SingleScaleRetinex_3(const Mat& src, Mat& dst, int sigma);
+void ssr(Mat src, Mat& dst, double sigma);
+Mat Compare_SSIM(Mat image1, Mat image2);
 
 // 巴特沃斯高通滤波核函数
 cv::Mat butterworth_high_kernel(cv::Mat &scr, float sigma, int n)
@@ -353,11 +359,35 @@ void LevelSet::EVolution()
 void main()
 {
 	//Mat img_IN = imread("D:\\Postgraduate\\09_project\\01_image\\07_Git\\BLCB_VS\\Level_Set\\B0ROI.bmp", -1);
-	Mat img_IN = imread("D:\\test\\verify\\Carell\\B03-0804-膜材打折 膜拱样本\\1138BG\\BRROI.bmp", -1);
-	Mat img_R = img_IN(Rect(0, 0, img_IN.cols, 500)).clone();
-	Mat img_R_IN = img_IN(Rect(0, 0, img_IN.cols, 500)).clone();
+	Mat img_IN = imread("D:\\test\\verify\\Carell\\B03-0804-膜材打折 膜拱样本\\1134BG\\BRROI.bmp", -1);
+	Mat img_R = img_IN(Rect(0, 0, img_IN.cols, img_IN.rows)).clone();
+	Mat img_R_IN = img_IN(Rect(0, 0, img_IN.cols, img_IN.rows)).clone();
+	Mat img_R_IN_3 = img_IN(Rect(0, 0, img_IN.cols, img_IN.rows)).clone();
+	Mat Diff_3;
+	Mat shieldMask;
+	threshold(img_R, shieldMask, 0.3 * mean(img_R)[0], 255, CV_THRESH_BINARY_INV);
+	imwrite("D:\\Postgraduate\\13_Image\\Matlab_code\\test\\img_R.bmp", img_R);
+	
+	//clahe_IN->apply(img_R, img_R);   //整图增强
+	//img_R = img_R + (img_R - img_R_IN);
+
+	SingleScaleRetinex(img_R, img_R_IN,10);
+	SingleScaleRetinex_3(img_R, img_R_IN_3, 10);
+	Diff_3 = Compare_SSIM(img_R_IN, img_R_IN_3);
+	float T = mean(Diff_3)[0];
+	threshold(img_R_IN, shieldMask, 0.3 * mean(img_R_IN)[0], 255, CV_THRESH_BINARY_INV);
+	imwrite("D:\\Postgraduate\\13_Image\\Matlab_code\\test\\img_R_IN.bmp", img_R_IN);
+	
+	//Mat img;
+	Ptr<CLAHE> clahe_IN = createCLAHE(2, Size(20, 20));
+	clahe_IN->apply(img_R_IN, img_R_IN);   //整图增强
+	/*Mat imageEnhance;
+	Mat kernel = (Mat_<float>(3, 3) << -1, 0, 1, -2,0, 2, -1, 0, 1);
+	filter2D(img_R_IN, imageEnhance, CV_8UC1, kernel);*/
 	//Mat img_R = img_IN.clone();
 	//img_R = butterworth_high_pass_filter(img_R,5,4);
+	img_R_IN = Gabor7(img_R_IN);
+	adaptiveThreshold(img_R_IN, img_R_IN, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY, 151, -1);//21   -1
 	GaussianBlur(img_R, img_R, Size(513, 513), 120);        //白底滤波
 	
 	Mat img_IN_New ;
@@ -420,10 +450,10 @@ Mat Gabor7(Mat img_1)
 
 void ssr(Mat src, Mat& dst, double sigma) {
 	Mat src_log, gauss, gauss_log, dst_log;
-	src_log = Mat(src.size(), CV_32FC3);
-	gauss_log = Mat(src.size(), CV_32FC3);
-	dst_log = Mat(src.size(), CV_32FC3);
-	dst = Mat(src.size(), CV_32FC3);
+	src_log = Mat(src.size(), CV_32FC1);
+	gauss_log = Mat(src.size(), CV_32FC1);
+	dst_log = Mat(src.size(), CV_32FC1);
+	dst = Mat(src.size(), CV_32FC1);
 	int height = dst_log.rows;
 	int width = dst_log.cols;
 	int ksize = (int)(sigma * 3 / 2);
@@ -431,57 +461,267 @@ void ssr(Mat src, Mat& dst, double sigma) {
 	//求Log(S(x,y)
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			for (int k = 0; k < 3; k++) {
-				float value = src.at<Vec3b>(i, j)[k];
+			//for (int k = 0; k < 3; k++) {
+				float value = src.at<uchar>(i, j);
 				if (value <= 0.01) value = 0.01;
-				src_log.at<Vec3f>(i, j)[k] = log10(value);
-			}
+				src_log.at<float>(i, j) = log10(value);
+			//}
 		}
 	}
 	GaussianBlur(src, gauss, Size(ksize, ksize), sigma, sigma, 4);
 	//求Log（L(x,y)）
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			for (int k = 0; k < 3; k++) {
-				float value = gauss.at<Vec3b>(i, j)[k];
+			//for (int k = 0; k < 3; k++) {
+				float value = gauss.at<uchar>(i, j);
 				if (value <= 0.01) value = 0.01;
-				gauss_log.at<Vec3f>(i, j)[k] = log10(value);
-			}
+				gauss_log.at<float>(i, j) = log10(value);
+			//}
 		}
 	}
 	//求Log（S（x,y）)-Log(L(x,y))
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			for (int k = 0; k < 3; k++) {
-				float value1 = src_log.at<Vec3f>(i, j)[k];
-				float value2 = gauss_log.at<Vec3f>(i, j)[k];
-				dst_log.at<Vec3f>(i, j)[k] = value1 - value2;
-			}
+			//for (int k = 0; k < 3; k++) {
+				float value1 = src_log.at<float>(i, j);
+				float value2 = gauss_log.at<float>(i, j);
+				dst_log.at<float>(i, j) = value1 - value2;
+			//}
 		}
 	}
-	float min[3] = { dst_log.at<Vec3f>(0, 0)[0], dst_log.at<Vec3f>(0, 0)[1],dst_log.at<Vec3f>(0, 0)[2] };
-	float max[3] = { dst_log.at<Vec3f>(0, 0)[0], dst_log.at<Vec3f>(0, 0)[1],dst_log.at<Vec3f>(0, 0)[2] };
+	float min =  dst_log.at<float>(0, 0) ;
+	float max =  dst_log.at<float>(0, 0) ;
 	//求R/G/B三通道的min,max
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			for (int k = 0; k < 3; k++) {
-				float value = dst_log.at<Vec3f>(i, j)[k];
-				if (value > max[k]) max[k] = value;
-				if (value < min[k]) min[k] = value;
-			}
+			//for (int k = 0; k < 3; k++) {
+				float value = dst_log.at<float>(i, j);
+				if (value > max) max = value;
+				if (value < min) min = value;
+			//}
 		}
 	}
 	//量化处理
-	cout << min[0] << " " << min[1] << " " << min[2] << endl;
-	cout << max[0] << " " << max[1] << " " << max[2] << endl;
+	cout << min << endl;
+	cout << max << endl;
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			for (int k = 0; k < 3; k++) {
-				float value = dst_log.at<Vec3f>(i, j)[k];
-				dst.at<Vec3f>(i, j)[k] = (saturate_cast<float>(255 * (value - min[k]) / (max[k] - min[k])));
-			}
+			//for (int k = 0; k < 3; k++) {
+				float value = dst_log.at<float>(i, j);
+				dst.at<float>(i, j) = (saturate_cast<float>(255 * (value - min) / (max - min)));
+			//}
 		}
 	}
-	dst.convertTo(dst, CV_8UC3);
+	dst.convertTo(dst, CV_8UC1);
 	return;
+}
+
+
+void SingleScaleRetinex(const Mat& src, Mat& dst, int sigma)
+{
+	Mat doubleImage, gaussianImage, logIImage, logGImage, logRImage,End_My, End_My_log, dst_My;
+	//Mat src_size, dst_size;
+	//转换范围，所有图像元素增加1.0保证log操作正常,防止溢出
+	//resize(src, src_size, Size(src.cols / 3, src.rows / 3), 0, 0, INTER_NEAREST);
+
+	src.convertTo(doubleImage, CV_64FC1, 1.0, 1.0);
+	//高斯模糊，当size为零时将通过sigma自动进行计算
+	GaussianBlur(doubleImage, gaussianImage, Size(0, 0), sigma);
+	normalize(gaussianImage, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+	//OpenCV的log函数可以计算出对数值。logIImage和logGImage就是对数计算的结果。
+	log(doubleImage, logIImage);
+	log(gaussianImage, logGImage);
+	//exp(logIImage, End_My);
+	//Retinex公式，Log(R(x,y))=Log(I(x,y))-Log(G(x,y)))
+	//normalize(End_My, End_My, 0, 255, NORM_MINMAX, CV_8UC1);
+	logRImage = logIImage - logGImage;
+	normalize(logRImage, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+	//exp(logRImage, End_My);
+	/*for (int i = 0; i < End_My.rows; i++) {
+		for (int j = 0; j < End_My.cols; j++) {
+			float value = End_My.at<float>(i, j);
+			if (dst_log.at<float>(i, j) < 60)
+			{
+				dst_log.at<float>(i, j) = y1 / x1 * s.val[0];
+			}
+			else if (dst_log.at<float>(i, j) >= )
+			{
+				dst_log.at<float>(i, j) = (y2 - y1) / (x2 - x1)*(s.val[0] - x1) + y1;
+			}
+			else
+			{
+				dst_log.at<float>(i, j) = (255 - y2) / (255 - x2)*(s.val[0] - x2) + y2;
+			}
+		}
+	}*/
+	//dst = Mat::zeros(logRImage.rows, logRImage.cols, CV_8UC1);
+	//double maxValue;
+	//double minValue;
+
+	//minMaxLoc(logRImage, &minValue, &maxValue);
+
+	//float a = minValue + (maxValue- minValue)/3;
+	//float b = maxValue - (maxValue - minValue)/9;
+	//uchar G_a = 60;
+	//uchar G_b = 235;
+	//for (int i = 0; i < logRImage.rows; i++) {
+	//	for (int j = 0; j < logRImage.cols; j++) {
+	//		float value = logRImage.at<double>(i,j);
+	//		/*if (value == 0)
+	//		{
+	//			dst.at<uchar>(i, j) = 0;
+	//		}
+	//		else {*/
+
+	//			if (value < a)
+	//			{
+	//				dst.at<uchar>(i, j) = uchar(double((G_a* (value- minValue)) /(a- minValue)));
+	//			}
+	//			else if (value >= b)
+	//			{
+	//				dst.at<uchar>(i, j) = uchar(double(((255 - G_b) *(value - b)) / (maxValue - b))) + G_b;
+	//			}
+	//			else
+	//			{
+	//				dst.at<uchar>(i, j) = uchar(double(((G_b - G_a) *(value - a)) / (b - a))) + G_a;
+	//			}
+	//		//}
+	//	}
+	//}
+
+	////normalize(logRImage, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+	//dst.convertTo(dst_My, CV_64FC1, 1.0, 1.0);
+	//log(dst_My, logRImage);
+	GaussianBlur(gaussianImage, End_My, Size(0, 0), sigma);
+	log(End_My, End_My_log);
+	normalize(End_My_log, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+	logRImage = logRImage + End_My_log;
+	//resize(logRImage, dst_size, Size(src.cols,src.rows), 0, 0, INTER_NEAREST);
+	//将结果量化到[0,255]范围内，NORM_MINMAX表示线性量化，CV_8UC1表示将图像转回
+	normalize(logRImage, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+	
+	
+
+}
+void SingleScaleRetinex_3(const Mat& src, Mat& dst, int sigma)
+{
+	Mat doubleImage, gaussianImage, logIImage, logGImage, logRImage, End_My, End_My_log, dst_My;
+	Mat src_size, dst_size;
+	//转换范围，所有图像元素增加1.0保证log操作正常,防止溢出
+	resize(src, src_size, Size(src.cols / 3, src.rows / 3), 0, 0, INTER_NEAREST);
+
+	src_size.convertTo(doubleImage, CV_64FC1, 1.0, 1.0);
+	//高斯模糊，当size为零时将通过sigma自动进行计算
+	GaussianBlur(doubleImage, gaussianImage, Size(0, 0), sigma);
+	normalize(gaussianImage, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+	//OpenCV的log函数可以计算出对数值。logIImage和logGImage就是对数计算的结果。
+	log(doubleImage, logIImage);
+	log(gaussianImage, logGImage);
+	//exp(logIImage, End_My);
+	//Retinex公式，Log(R(x,y))=Log(I(x,y))-Log(G(x,y)))
+	//normalize(End_My, End_My, 0, 255, NORM_MINMAX, CV_8UC1);
+	logRImage = logIImage - logGImage;
+	normalize(logRImage, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+	//exp(logRImage, End_My);
+	/*for (int i = 0; i < End_My.rows; i++) {
+		for (int j = 0; j < End_My.cols; j++) {
+			float value = End_My.at<float>(i, j);
+			if (dst_log.at<float>(i, j) < 60)
+			{
+				dst_log.at<float>(i, j) = y1 / x1 * s.val[0];
+			}
+			else if (dst_log.at<float>(i, j) >= )
+			{
+				dst_log.at<float>(i, j) = (y2 - y1) / (x2 - x1)*(s.val[0] - x1) + y1;
+			}
+			else
+			{
+				dst_log.at<float>(i, j) = (255 - y2) / (255 - x2)*(s.val[0] - x2) + y2;
+			}
+		}
+	}*/
+	//dst = Mat::zeros(logRImage.rows, logRImage.cols, CV_8UC1);
+	//double maxValue;
+	//double minValue;
+
+	//minMaxLoc(logRImage, &minValue, &maxValue);
+
+	//float a = minValue + (maxValue- minValue)/3;
+	//float b = maxValue - (maxValue - minValue)/9;
+	//uchar G_a = 60;
+	//uchar G_b = 235;
+	//for (int i = 0; i < logRImage.rows; i++) {
+	//	for (int j = 0; j < logRImage.cols; j++) {
+	//		float value = logRImage.at<double>(i,j);
+	//		/*if (value == 0)
+	//		{
+	//			dst.at<uchar>(i, j) = 0;
+	//		}
+	//		else {*/
+
+	//			if (value < a)
+	//			{
+	//				dst.at<uchar>(i, j) = uchar(double((G_a* (value- minValue)) /(a- minValue)));
+	//			}
+	//			else if (value >= b)
+	//			{
+	//				dst.at<uchar>(i, j) = uchar(double(((255 - G_b) *(value - b)) / (maxValue - b))) + G_b;
+	//			}
+	//			else
+	//			{
+	//				dst.at<uchar>(i, j) = uchar(double(((G_b - G_a) *(value - a)) / (b - a))) + G_a;
+	//			}
+	//		//}
+	//	}
+	//}
+
+	////normalize(logRImage, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+	//dst.convertTo(dst_My, CV_64FC1, 1.0, 1.0);
+	//log(dst_My, logRImage);
+	GaussianBlur(gaussianImage, End_My, Size(0, 0), sigma);
+	log(End_My, End_My_log);
+	normalize(End_My_log, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+	logRImage = logRImage + End_My_log;
+	resize(logRImage, dst_size, Size(src.cols, src.rows), 0, 0, INTER_NEAREST);
+	//将结果量化到[0,255]范围内，NORM_MINMAX表示线性量化，CV_8UC1表示将图像转回
+	normalize(dst_size, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+
+
+
+}
+
+Mat Compare_SSIM(Mat image1, Mat image2)
+{
+	Mat validImage1, validImage2;
+	image1.convertTo(validImage1, CV_32F); //数据类型转换为 float,防止后续计算出现错误
+	image2.convertTo(validImage2, CV_32F);
+
+	Mat image1_1 = validImage1.mul(validImage1); //图像乘积
+	Mat image2_2 = validImage2.mul(validImage2);
+	Mat image1_2 = validImage1.mul(validImage2);
+
+	Mat gausBlur1, gausBlur2, gausBlur12;
+	GaussianBlur(validImage1, gausBlur1, Size(11, 11), 1.5); //高斯卷积核计算图像均值
+	GaussianBlur(validImage2, gausBlur2, Size(11, 11), 1.5);
+	GaussianBlur(image1_2, gausBlur12, Size(11, 11), 1.5);
+
+	Mat imageAvgProduct = gausBlur1.mul(gausBlur2); //均值乘积
+	Mat u1Squre = gausBlur1.mul(gausBlur1); //各自均值的平方
+	Mat u2Squre = gausBlur2.mul(gausBlur2);
+
+	Mat imageConvariance, imageVariance1, imageVariance2;
+	Mat squreAvg1, squreAvg2;
+	GaussianBlur(image1_1, squreAvg1, Size(11, 11), 1.5); //图像平方的均值
+	GaussianBlur(image2_2, squreAvg2, Size(11, 11), 1.5);
+
+	imageConvariance = gausBlur12 - gausBlur1.mul(gausBlur2);// 计算协方差
+	imageVariance1 = squreAvg1 - gausBlur1.mul(gausBlur1); //计算方差
+	imageVariance2 = squreAvg2 - gausBlur2.mul(gausBlur2);
+
+	auto member = ((2 * gausBlur1.mul(gausBlur2) + C1).mul(2 * imageConvariance + C2));
+	auto denominator = ((u1Squre + u2Squre + C1).mul(imageVariance1 + imageVariance2 + C2));
+
+	Mat ssim;
+	divide(member, denominator, ssim);
+	return ssim;
 }
